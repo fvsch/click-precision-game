@@ -1,21 +1,19 @@
 <script>
-  import { screen, instaDeath, gameSpeed, playgroundSize, targetSize } from "../store.js";
+  import { screen } from "../state.js";
+  import { instaDeath, gameSpeed, playgroundSize, targetSize } from "../store.js";
   import Playground from "./Playground.svelte";
   import Results from "./Results.svelte";
   import Setup from "./Setup.svelte";
 
+  // The 'SHOW_RESULTS' event should have a 'resultData' object in its payload,
+  // and we need to store that payload in this component's state to pass it down
+  // to the Results component. Alternatively, we could use XState’s 'context'.
   let resultData = {};
-
-  function startPlaying() {
-    $screen = "playground";
-  }
-  function goToSetup() {
-    $screen = "setup";
-  }
-  function goToResults(data) {
-    $screen = "results";
-    resultData = data;
-  }
+  screen.onTransition((state, event) => {
+    if (state.changed && event.resultData) {
+      resultData = event.resultData;
+    }
+  });
 </script>
 
 <style>
@@ -62,11 +60,11 @@
     --game-speed: ${$gameSpeed}ms;
     --playground-size: ${$playgroundSize}px;
     --target-size: ${$targetSize}px;`}>
-  {#if $screen === 'setup'}
-    <Setup startPlaying={startPlaying} />
-  {:else if $screen === 'playground'}
-    <Playground goToSetup={goToSetup} goToResults={goToResults} />
-  {:else if $screen === 'results'}
-    <Results goToSetup={goToSetup} {...resultData} />
+  {#if $screen.matches('setup')}
+    <Setup />
+  {:else if $screen.matches('playing')}
+    <Playground />
+  {:else if $screen.matches('results')}
+    <Results {...resultData} />
   {/if}
 </section>

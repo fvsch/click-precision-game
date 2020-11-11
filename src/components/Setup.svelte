@@ -1,13 +1,12 @@
 <script>
-  import { gameSpeedInput, instaDeath, playgroundSizeInput, targetSizeInput } from "../store.js";
   import { PLAYGROUND_SIZE, TARGET_SIZE, SPEED } from "../constants.js";
+  import { screen } from "../state.js";
+  import { gameSpeedInput, instaDeath, playgroundSizeInput, targetSizeInput } from "../store.js";
   import Button from "./Button.svelte";
-
-  export let startPlaying = () => {};
 
   function onSubmit(event) {
     event.preventDefault();
-    startPlaying();
+    screen.send("START_PLAYING");
   }
 </script>
 
@@ -114,6 +113,7 @@
         <label for="target-size">Cible (px)</label>
         <input
           bind:value={$targetSizeInput}
+          required
           type="number"
           id="target-size"
           step={TARGET_SIZE.STEP}
@@ -125,6 +125,7 @@
         <label for="playground-size">Conteneur (px)</label>
         <input
           bind:value={$playgroundSizeInput}
+          required
           type="number"
           id="playground-size"
           step={PLAYGROUND_SIZE.STEP}
@@ -136,6 +137,7 @@
         <label for="game-speed">Vitesse (ms)</label>
         <input
           bind:value={$gameSpeedInput}
+          required
           type="number"
           id="game-speed"
           step={SPEED.STEP}

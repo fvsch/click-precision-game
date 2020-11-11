@@ -1,13 +1,17 @@
 <script>
   import { getScoreIcon } from "../helpers.js";
+  import { screen } from "../state.js";
   import { gameSpeed, instaDeath, playgroundSize, targetSize } from "../store.js";
   import Button from "./Button.svelte";
 
-  export let goToSetup = () => {};
   export let score = 0;
   export let turns = 0;
   export let successCount = 0;
   export let misclickCount = 0;
+
+  function goToSetup() {
+    screen.send("SHOW_SETUP");
+  }
 
   let scoreIcon;
   $: scoreIcon = getScoreIcon(score, $instaDeath);

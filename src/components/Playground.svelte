@@ -8,11 +8,9 @@
     TURN_STATE,
   } from "../constants.js";
   import { clamp } from "../helpers.js";
+  import { screen } from "../state.js";
   import { gameSpeed, instaDeath, playgroundSize, targetSize } from "../store.js";
   import Button from "./Button.svelte";
-
-  export let goToSetup = () => {};
-  export let goToResults = () => {};
 
   let phaseKey;
   let turnState = TURN_STATE.START;
@@ -88,11 +86,14 @@
   }
 
   function showResults() {
-    goToResults({
-      score,
-      turns,
-      successCount,
-      misclickCount,
+    screen.send({
+      type: "SHOW_RESULTS",
+      resultData: {
+        score,
+        turns,
+        successCount,
+        misclickCount,
+      },
     });
   }
 
@@ -175,7 +176,7 @@
 
   function restartGame() {
     pausePhase();
-    goToSetup();
+    screen.send("SHOW_SETUP");
   }
 </script>
 
