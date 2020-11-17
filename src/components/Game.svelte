@@ -1,6 +1,12 @@
 <script>
-  import { screen } from "../state.js";
-  import { instaDeath, gameSpeed, playgroundSize, targetSize } from "../store.js";
+  import gameState from "../state/game.js";
+  import {
+    gamePhaseDurations,
+    gameSpeed,
+    instaDeath,
+    playgroundSize,
+    targetSize,
+  } from "../state/setup.js";
   import Playground from "./Playground.svelte";
   import Results from "./Results.svelte";
   import Setup from "./Setup.svelte";
@@ -9,7 +15,7 @@
   // and we need to store that payload in this component's state to pass it down
   // to the Results component. Alternatively, we could use XState’s 'context'.
   let resultData = {};
-  screen.onTransition((state, event) => {
+  gameState.onTransition((state, event) => {
     if (state.changed && event.resultData) {
       resultData = event.resultData;
     }
@@ -18,8 +24,8 @@
 
 <style>
   .precision-container {
-    --game-speed: 1500ms;
-    --playground-size: 400px;
+    --game-speed: 1000ms;
+    --playground-size: 600px;
     --target-size: 24px;
     --target-border: #428549;
     --target-background: #90c296;
@@ -28,7 +34,6 @@
     --color-text-light: white;
     --color-background-dark: hsl(265, 15%, 40%);
     --color-background-light: hsl(265, 20%, 92%);
-
     box-sizing: content-box;
     display: flex;
     flex-direction: column;
@@ -58,13 +63,14 @@
   class:precision-container-instadeath={$instaDeath}
   style={`
     --game-speed: ${$gameSpeed}ms;
+    --countdown-tick: ${Math.floor($gamePhaseDurations.countdown / 6)}ms;
     --playground-size: ${$playgroundSize}px;
     --target-size: ${$targetSize}px;`}>
-  {#if $screen.matches('setup')}
+  {#if $gameState.matches('setup')}
     <Setup />
-  {:else if $screen.matches('playing')}
+  {:else if $gameState.matches('playing')}
     <Playground />
-  {:else if $screen.matches('results')}
+  {:else if $gameState.matches('results')}
     <Results {...resultData} />
   {/if}
 </section>

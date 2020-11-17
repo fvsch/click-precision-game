@@ -1,149 +1,183 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import {
-    MAX_TURNS,
-    GOOD_CLICK_POINTS,
-    BAD_CLICK_POINTS,
-    PLAY_PHASES,
-    TURN_STATE,
-  } from "../constants.js";
+  import { CLICK_POINTS, MAX_TURNS, TURN_SUCCESS } from "../constants.js";
   import { clamp } from "../helpers.js";
-  import { screen } from "../state.js";
-  import { gameSpeed, instaDeath, playgroundSize, targetSize } from "../store.js";
+  import gameState, { send } from "../state/game.js";
+  import { gamePhaseDurations, instaDeath, playgroundSize, targetSize } from "../state/setup.js";
   import Button from "./Button.svelte";
 
-  let phaseKey;
-  let turnState = TURN_STATE.START;
-  let turns = 0;
+  let turnSuccess;
+  let turnsCount = 0;
   let score = 0;
   let successCount = 0;
   let misclickCount = 0;
   let progressPercent = "";
 
   let timeout;
-  let countdown = 0;
-  let showTarget = false;
 
-  let misclickPosition = { x: 0, y: 0 };
+  let misclickPosition = { x: -100, y: -100 };
   let misclickStateClass = "";
 
-  let targetPosition = { x: 0, y: 0 };
+  let targetPosition = { x: -100, y: -100 };
   let targetStateClass = "";
 
   $: {
-    progressPercent = clamp(0, Math.round((turns / MAX_TURNS) * 100), 100);
-    targetStateClass = getTargetStateClass(turnState, $instaDeath);
+    progressPercent = clamp(0, Math.round((turnsCount / MAX_TURNS) * 100), 100);
+    targetStateClass = getTargetStateClass(turnSuccess, $instaDeath);
   }
 
+  // Listen to state transitions.
+  // This should give us a first state with `{ playing: "start" }` as its value.
   onMount(() => {
-    startPhase("START");
+    gameState.onTransition(startPhase);
   });
+
+  // Clean up listeners and timers
   onDestroy(() => {
-    pausePhase();
+    gameState.off(startPhase);
+    clearTimeout(timeout);
   });
 
-  function pausePhase() {
-    if (timeout) clearTimeout(timeout);
-  }
-
-  function startPhase(key) {
-    pausePhase();
-    phaseKey = key;
-    const phase = PLAY_PHASES[key];
-    if (!phase) {
-      const validKeys = Object.keys(PLAY_PHASES).join(", ");
-      throw new Error(`Unknown play phase ${key} (must be one of: ${validKeys}`);
+  /**
+   * At the start of a game phase (countdown, turn or cooldown),
+   * update the UI and schedule the next phase.
+   */
+  function startPhase(state) {
+    const phaseKey = state.value.playing;
+    if (!state.changed || !phaseKey || !(phaseKey in $gamePhaseDurations)) {
+      return;
     }
 
-    if (key === "TURN") {
-      if (
-        (!$instaDeath && turns >= MAX_TURNS) ||
-        ($instaDeath && turnState === TURN_STATE.MISSED)
-      ) {
-        showResults();
-        return;
-      }
-      // Reset click state on turn start
-      turns += 1;
-      turnState = TURN_STATE.START;
+    // Different events can lead to competing timeouts
+    clearTimeout(timeout);
+
+    // Event to send at the end of this phase
+    let onPhaseEnd = () => send("NEXT");
+
+    // Start new turns with a blank success state and new position
+    if (phaseKey === "turn") {
+      turnsCount += 1;
+      turnSuccess = TURN_SUCCESS.PLAYING;
       targetPosition = getTargetPosition(targetPosition);
-    } else if (key === "COOLDOWN") {
-      if (turnState === TURN_STATE.SUCCESS) {
+    }
+
+    // In the cooldown phase, analyse the last turn
+    if (phaseKey === "cooldown") {
+      // Register the previous turn's failure or success
+      if (turnSuccess === TURN_SUCCESS.SUCCESS) {
         successCount += 1;
-      } else if (turnState === TURN_STATE.START) {
-        turnState = TURN_STATE.MISSED;
+      }
+      // If not successful when cooldown starts, set the turnSuccess to
+      // update the UI and make the target disappear
+      if (turnSuccess === TURN_SUCCESS.PLAYING) {
+        turnSuccess = TURN_SUCCESS.MISSED;
+      }
+      // Should we end the game at the end of the cooldown?
+      // Normal mode: after MAX_TURNS
+      // InstaDeath: if the previous turn was a failure
+      if (
+        (!$instaDeath && turnsCount >= MAX_TURNS) ||
+        ($instaDeath && turnSuccess !== TURN_SUCCESS.SUCCESS)
+      ) {
+        onPhaseEnd = showResults;
       }
     }
-    // Update UI
-    countdown = phase.countdown;
-    showTarget = phase.showTarget;
 
     // Schedule next phase
-    timeout = setTimeout(
-      () => startPhase(phase.next),
-      Math.max(phase.minDuration, phase.durationRatio * $gameSpeed)
-    );
+    timeout = setTimeout(onPhaseEnd, $gamePhaseDurations[phaseKey]);
   }
 
   function showResults() {
-    screen.send({
+    send({
       type: "SHOW_RESULTS",
       resultData: {
         score,
-        turns,
+        turnsCount,
         successCount,
         misclickCount,
       },
     });
   }
 
-  function recordClick(success) {
-    // Count all misclicks, at any phase in the game
-    if (!success) {
+  /**
+   * In normal mode, players can click however many times they want,
+   * but misclicks will dock their score.
+   */
+  function recordClick(onTarget) {
+    // Conditions for success: on target, only counted once, and during the turn
+    // (not during cooldown while the target is fading out).
+    if (
+      onTarget === true &&
+      turnSuccess === TURN_SUCCESS.PLAYING &&
+      $gameState.matches("playing.turn")
+    ) {
+      score += CLICK_POINTS.SUCCESS;
+      turnSuccess = TURN_SUCCESS.SUCCESS;
+    }
+
+    // Count all misclicks, at any phase in the game.
+    // Do not set the TURN_SUCCESS.MISSED state, since it’s final and will make
+    // the target disappear. Instead, we want players to still be able to try.
+    if (onTarget === false) {
+      score = Math.max(0, score + CLICK_POINTS.MISSED);
       misclickCount += 1;
-      if (score > 0 && !$instaDeath) score += BAD_CLICK_POINTS;
     }
-    // Any click during a turn ends the turn early
-    if (phaseKey === "TURN" && turnState === TURN_STATE.START) {
-      if (success) {
-        score += GOOD_CLICK_POINTS;
-        turnState = TURN_STATE.SUCCESS;
-      } else {
-        turnState = TURN_STATE.MISSED;
-      }
-      startPhase("COOLDOWN");
+  }
+
+  /**
+   * In instadeath mode, any click ends the turn.
+   */
+  function recordInstadeathClick(onTarget) {
+    if (onTarget === true && turnSuccess === TURN_SUCCESS.PLAYING) {
+      turnSuccess = TURN_SUCCESS.SUCCESS;
+    } else {
+      turnSuccess = TURN_SUCCESS.MISSED;
     }
+    send("END_TURN");
   }
 
   function onSuccess(event) {
     event.preventDefault();
     event.stopPropagation();
-    recordClick(true);
+    if ($instaDeath) {
+      recordInstadeathClick(true);
+    } else {
+      recordClick(true);
+    }
   }
 
   function onMisclick(event) {
     event.preventDefault();
     event.stopPropagation();
     displayMisclick(event.offsetX, event.offsetY);
-    recordClick(false);
+    if ($instaDeath) {
+      recordInstadeathClick(false);
+    } else {
+      recordClick(false);
+    }
   }
 
   function getTargetStateClass(state, isInstaDeath) {
     switch (state) {
-      case TURN_STATE.SUCCESS:
+      case TURN_SUCCESS.SUCCESS:
         return "__success__";
-      case TURN_STATE.MISSED:
+      case TURN_SUCCESS.MISSED:
         return isInstaDeath ? "__fatal__" : "__missed__";
+      case TURN_SUCCESS.PLAYING:
+        return "__playing__";
       default:
-        return "";
+        return "__hidden__";
     }
   }
 
   function displayMisclick(x, y) {
+    const container = document.querySelector(".precision-container");
+    container.classList.remove("__misclick__");
     misclickStateClass = "";
     misclickPosition = { x, y };
     requestAnimationFrame(() => {
       misclickStateClass = "__reveal__";
+      container.classList.add("__misclick__");
     });
   }
 
@@ -175,8 +209,7 @@
   }
 
   function restartGame() {
-    pausePhase();
-    screen.send("SHOW_SETUP");
+    send("SHOW_SETUP");
   }
 </script>
 
@@ -224,8 +257,8 @@
   /* Countdown text */
   .precision-countdown {
     box-sizing: border-box;
-    display: flex;
-    align-items: center;
+    display: grid;
+    align-content: center;
     justify-content: center;
     position: absolute;
     top: 0;
@@ -238,16 +271,31 @@
     text-align: center;
     font-weight: bold;
     text-shadow: 0.05em 0.05em white;
-    font-size: 24px;
-    line-height: 1;
+    line-height: 1.2;
     color: var(--color-highlight);
   }
+  .precision-countdown > * {
+    opacity: 0;
+    grid-column: 1;
+    grid-row: 1;
+  }
   .precision-countdown span {
-    animation: calc(var(--game-speed) * 1) ease-out forwards countdown-flash-in-out;
+    font-size: 24px;
+    animation: calc(var(--countdown-tick) * 2) ease-out forwards countdown-flash-in-out;
   }
   .precision-countdown strong {
     font-size: 60px;
-    animation: calc(var(--game-speed) * 0.5) ease-out forwards countdown-flash-out;
+    line-height: 1;
+    animation: var(--countdown-tick) ease-out forwards countdown-flash-out;
+  }
+  .precision-countdown strong:nth-child(2) {
+    animation-delay: calc(var(--countdown-tick) * 2);
+  }
+  .precision-countdown strong:nth-child(3) {
+    animation-delay: calc(var(--countdown-tick) * 3);
+  }
+  .precision-countdown strong:nth-child(4) {
+    animation-delay: calc(var(--countdown-tick) * 4);
   }
   @media (min-width: 500px) {
     .precision-countdown span {
@@ -282,6 +330,9 @@
   }
   .precision-target[aria-hidden="true"] {
     display: none;
+  }
+  .precision-target.__hidden__0 {
+    visibility: hidden;
   }
   .precision-target.__success__ {
     background-color: lime;
@@ -415,19 +466,18 @@
 <div class="precision-playground">
   <div class="precision-target-wrapper" on:mousedown={onMisclick}>
     <button
-      aria-hidden={String(!showTarget)}
+      aria-hidden={String(!($gameState.matches('playing.turn') || $gameState.matches('playing.cooldown')))}
       aria-label="Cible"
       class="precision-target {targetStateClass}"
       style="--x: {targetPosition.x}px; --y: {targetPosition.y}px;"
       on:mousedown={onSuccess} />
   </div>
-  {#if countdown}
+  {#if $gameState.matches('playing.countdown')}
     <p class="precision-countdown">
-      {#if countdown === 4}
-        <span>Clique le carré vert</span>
-      {:else if countdown === 3}
-        <strong>3</strong>
-      {:else if countdown === 2}<strong>2</strong>{:else if countdown === 1}<strong>1</strong>{/if}
+      <span>Clique le carré vert</span>
+      <strong>3</strong>
+      <strong>2</strong>
+      <strong>1</strong>
     </p>
   {/if}
   <span

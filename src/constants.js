@@ -19,60 +19,18 @@ export const SPEED = {
   STEP: 100,
 };
 
-export const PLAY_PHASES = {
-  START: {
-    next: "COUNTDOWN_3",
-    durationRatio: 1,
-    minDuration: 1000,
-    countdown: 4,
-    showTarget: false,
-  },
-  COUNTDOWN_3: {
-    next: "COUNTDOWN_2",
-    durationRatio: 0.5,
-    minDuration: 400,
-    countdown: 3,
-    showTarget: false,
-  },
-  COUNTDOWN_2: {
-    next: "COUNTDOWN_1",
-    durationRatio: 0.5,
-    minDuration: 400,
-    countdown: 2,
-    showTarget: false,
-  },
-  COUNTDOWN_1: {
-    next: "TURN",
-    durationRatio: 0.5,
-    minDuration: 400,
-    countdown: 1,
-    showTarget: false,
-  },
-  TURN: {
-    next: "COOLDOWN",
-    durationRatio: 1,
-    minDuration: 400,
-    countdown: 0,
-    showTarget: true,
-  },
-  COOLDOWN: {
-    next: "TURN",
-    durationRatio: 0.5,
-    minDuration: 400,
-    countdown: 0,
-    showTarget: true,
-  },
-};
-
-export const TURN_STATE = {
-  START: "START",
+export const TURN_SUCCESS = {
+  PLAYING: "PLAYING",
   SUCCESS: "SUCCESS",
   MISSED: "MISSED",
 };
 
 export const MAX_TURNS = 20;
-export const GOOD_CLICK_POINTS = 5;
-export const BAD_CLICK_POINTS = -1;
+
+export const CLICK_POINTS = {
+  SUCCESS: 5,
+  MISSED: -2,
+};
 
 export const SCORE_EMOJI_MAP = {
   0: "👻",

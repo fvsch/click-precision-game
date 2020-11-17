@@ -1,16 +1,16 @@
 <script>
   import { getScoreIcon } from "../helpers.js";
-  import { screen } from "../state.js";
-  import { gameSpeed, instaDeath, playgroundSize, targetSize } from "../store.js";
+  import { send } from "../state/game.js";
+  import { gameSpeed, instaDeath, playgroundSize, targetSize } from "../state/setup.js";
   import Button from "./Button.svelte";
 
   export let score = 0;
-  export let turns = 0;
+  export let turnsCount = 0;
   export let successCount = 0;
   export let misclickCount = 0;
 
   function goToSetup() {
-    screen.send("SHOW_SETUP");
+    send("SHOW_SETUP");
   }
 
   let scoreIcon;
@@ -75,10 +75,15 @@
   </h3>
 
   <table class="precision-params">
-    {#if !$instaDeath}
+    {#if $instaDeath}
       <tr>
         <th scope="row">Cibles touchées</th>
-        <td>{successCount} / {turns}</td>
+        <td>{successCount}</td>
+      </tr>
+    {:else}
+      <tr>
+        <th scope="row">Cibles touchées</th>
+        <td>{successCount} / {turnsCount}</td>
       </tr>
       <tr>
         <th scope="row">Clics à côté</th>

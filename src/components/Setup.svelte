@@ -1,12 +1,17 @@
 <script>
   import { PLAYGROUND_SIZE, TARGET_SIZE, SPEED } from "../constants.js";
-  import { screen } from "../state.js";
-  import { gameSpeedInput, instaDeath, playgroundSizeInput, targetSizeInput } from "../store.js";
+  import { send } from "../state/game.js";
+  import {
+    gameSpeedInput,
+    instaDeath,
+    playgroundSizeInput,
+    targetSizeInput,
+  } from "../state/setup.js";
   import Button from "./Button.svelte";
 
   function onSubmit(event) {
     event.preventDefault();
-    screen.send("START_PLAYING");
+    send("START_PLAYING");
   }
 </script>
 
@@ -49,6 +54,10 @@
     border-radius: 2px;
     border: solid 2px var(--target-border);
     background-color: var(--target-background);
+  }
+  .precision-target:active {
+    background-color: lime;
+    box-shadow: 0 0 10px lime;
   }
   .precision-settings {
     margin: 0.25em -0.75em;
