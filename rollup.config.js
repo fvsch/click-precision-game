@@ -1,6 +1,7 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import replace from "@rollup/plugin-replace";
+import css from 'rollup-plugin-css-only';
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import svelte from "rollup-plugin-svelte";
@@ -21,7 +22,6 @@ function serve() {
         stdio: ["ignore", "inherit", "inherit"],
         shell: true,
       });
-
       process.on("SIGTERM", toExit);
       process.on("exit", toExit);
     },
@@ -38,13 +38,15 @@ export default {
   },
   plugins: [
     svelte({
-      // enable run-time checks when not in production
-      dev: !production,
-      // we'll extract any component CSS out into
-      // a separate file - better for performance
-      css: (css) => {
-        css.write("bundle.css");
+      compilerOptions: {
+        // enable run-time checks when not in production
+        dev: !production,
       },
+    }),
+    // we'll extract any component CSS out into
+    // a separate file - better for performance
+    css({
+      output: "bundle.css"
     }),
 
     // If you have external dependencies installed from
