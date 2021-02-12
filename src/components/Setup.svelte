@@ -15,6 +15,64 @@
   }
 </script>
 
+<div class="precision-setup">
+  <h3 class="precision-title">Petit jeu de précision…</h3>
+  <p class="precision-intro">
+    Material Design recommande des boutons de 24px minimum pour les interfaces à la souris. Est-ce
+    que cela vous semble suffisant&nbsp;?
+  </p>
+  <p class="precision-target-demo"><span class="precision-target" /></p>
+  <form class="precision-settings" on:submit={onSubmit}>
+    <div class="precision-settings-row">
+      <p>
+        <label for="target-size">Cible (px)</label>
+        <input
+          bind:value={$targetSizeInput}
+          required
+          type="number"
+          id="target-size"
+          step={TARGET_SIZE.STEP}
+          min={TARGET_SIZE.MIN}
+          max={TARGET_SIZE.MAX}
+          title="Taille de la cible entre {TARGET_SIZE.MIN} et {TARGET_SIZE.MAX} pixels" />
+      </p>
+      <p>
+        <label for="playground-size">Conteneur (px)</label>
+        <input
+          bind:value={$playgroundSizeInput}
+          required
+          type="number"
+          id="playground-size"
+          step={PLAYGROUND_SIZE.STEP}
+          min={PLAYGROUND_SIZE.MIN}
+          max={PLAYGROUND_SIZE.MAX}
+          title="Taille du conteneur entre {PLAYGROUND_SIZE.MIN} et {PLAYGROUND_SIZE.MAX} pixels" />
+      </p>
+      <p>
+        <label for="game-speed">Vitesse (ms)</label>
+        <input
+          bind:value={$gameSpeedInput}
+          required
+          type="number"
+          id="game-speed"
+          step={SPEED.STEP}
+          min={SPEED.MIN}
+          max={SPEED.MAX}
+          title="Vitesse du jeu entre {SPEED.MIN}ms et {SPEED.MAX}ms" />
+      </p>
+    </div>
+    <p class="precision-settings-instadeath">
+      <label for="insta-death">
+        <input type="checkbox" bind:checked={$instaDeath} id="insta-death" />
+        <span>Mort subite 💣</span>
+      </label>
+    </p>
+    <p class="precision-settings-submit">
+      <Button type="submit" big full text="▶️ Commencer" />
+    </p>
+  </form>
+</div>
+
 <style>
   .precision-setup {
     box-sizing: border-box;
@@ -108,61 +166,3 @@
     margin-right: 4px;
   }
 </style>
-
-<div class="precision-setup">
-  <h3 class="precision-title">Petit jeu de précision…</h3>
-  <p class="precision-intro">
-    Material Design recommande des boutons de 24px minimum pour les interfaces à la souris. Est-ce
-    que cela vous semble suffisant&nbsp;?
-  </p>
-  <p class="precision-target-demo"><span class="precision-target" /></p>
-  <form class="precision-settings" on:submit={onSubmit}>
-    <div class="precision-settings-row">
-      <p>
-        <label for="target-size">Cible (px)</label>
-        <input
-          bind:value={$targetSizeInput}
-          required
-          type="number"
-          id="target-size"
-          step={TARGET_SIZE.STEP}
-          min={TARGET_SIZE.MIN}
-          max={TARGET_SIZE.MAX}
-          title="Taille de la cible entre {TARGET_SIZE.MIN} et {TARGET_SIZE.MAX} pixels" />
-      </p>
-      <p>
-        <label for="playground-size">Conteneur (px)</label>
-        <input
-          bind:value={$playgroundSizeInput}
-          required
-          type="number"
-          id="playground-size"
-          step={PLAYGROUND_SIZE.STEP}
-          min={PLAYGROUND_SIZE.MIN}
-          max={PLAYGROUND_SIZE.MAX}
-          title="Taille du conteneur entre {PLAYGROUND_SIZE.MIN} et {PLAYGROUND_SIZE.MAX} pixels" />
-      </p>
-      <p>
-        <label for="game-speed">Vitesse (ms)</label>
-        <input
-          bind:value={$gameSpeedInput}
-          required
-          type="number"
-          id="game-speed"
-          step={SPEED.STEP}
-          min={SPEED.MIN}
-          max={SPEED.MAX}
-          title="Vitesse du jeu entre {SPEED.MIN}ms et {SPEED.MAX}ms" />
-      </p>
-    </div>
-    <p class="precision-settings-instadeath">
-      <label for="insta-death">
-        <input type="checkbox" bind:checked={$instaDeath} id="insta-death" />
-        <span>Mort subite 💣</span>
-      </label>
-    </p>
-    <p class="precision-settings-submit">
-      <Button type="submit" big full text="▶️ Commencer" />
-    </p>
-  </form>
-</div>

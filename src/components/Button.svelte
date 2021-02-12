@@ -6,6 +6,16 @@
   export let dark = false;
 </script>
 
+<button
+  type={type}
+  class="precision-button"
+  class:precision-button-big={big}
+  class:precision-button-full={full}
+  class:precision-button-dark={dark}
+  on:click>
+  {text}
+</button>
+
 <style>
   .precision-button {
     --button-color: var(--color-text-dark);
@@ -45,13 +55,3 @@
     --button-border: rgba(255, 255, 255, 0.25);
   }
 </style>
-
-<button
-  type={type}
-  class="precision-button"
-  class:precision-button-big={big}
-  class:precision-button-full={full}
-  class:precision-button-dark={dark}
-  on:click>
-  {text}
-</button>

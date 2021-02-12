@@ -22,6 +22,23 @@
   });
 </script>
 
+<section
+  class="precision-container"
+  class:precision-container-instadeath={$instaDeath}
+  style={`
+    --game-speed: ${$gameSpeed}ms;
+    --countdown-tick: ${Math.floor($gamePhaseDurations.countdown / 6)}ms;
+    --playground-size: ${$playgroundSize}px;
+    --target-size: ${$targetSize}px;`}>
+  {#if $gameState.matches("setup")}
+    <Setup />
+  {:else if $gameState.matches("playing")}
+    <Playground />
+  {:else if $gameState.matches("results")}
+    <Results {...resultData} />
+  {/if}
+</section>
+
 <style>
   .precision-container {
     --game-speed: 1000ms;
@@ -57,20 +74,3 @@
     --color-background-light: hsl(0, 20%, 92%);
   }
 </style>
-
-<section
-  class="precision-container"
-  class:precision-container-instadeath={$instaDeath}
-  style={`
-    --game-speed: ${$gameSpeed}ms;
-    --countdown-tick: ${Math.floor($gamePhaseDurations.countdown / 6)}ms;
-    --playground-size: ${$playgroundSize}px;
-    --target-size: ${$targetSize}px;`}>
-  {#if $gameState.matches('setup')}
-    <Setup />
-  {:else if $gameState.matches('playing')}
-    <Playground />
-  {:else if $gameState.matches('results')}
-    <Results {...resultData} />
-  {/if}
-</section>

@@ -214,6 +214,33 @@
   }
 </script>
 
+<header class="precision-toolbar">
+  <span class="precision-toolbar-score"> <strong>Score&nbsp;: {score}</strong> </span>
+  <span class="precision-toolbar-buttons">
+    <Button dark on:click={restartGame} text="🔄 Recommencer" />
+  </span>
+  {#if !$instaDeath}<span class="precision-progress" style="width: {progressPercent}%" />{/if}
+</header>
+
+<div class="precision-playground">
+  <div class="precision-target-wrapper" on:mousedown={onMisclick}>
+    <button
+      aria-hidden={String(
+        !($gameState.matches("playing.turn") || $gameState.matches("playing.cooldown"))
+      )}
+      aria-label="Cible"
+      class="precision-target {targetStateClass}"
+      style="--x: {targetPosition.x}px; --y: {targetPosition.y}px;"
+      on:mousedown={onSuccess} />
+  </div>
+  {#if $gameState.matches("playing.countdown")}
+    <Countdown />
+  {/if}
+  <span
+    class="precision-misclick {misclickStateClass}"
+    style="--x: {misclickPosition.x}px; --y: {misclickPosition.y}px;" />
+</div>
+
 <style>
   /* Toolbar */
   .precision-toolbar {
@@ -377,28 +404,3 @@
     }
   }
 </style>
-
-<header class="precision-toolbar">
-  <span class="precision-toolbar-score"> <strong>Score&nbsp;: {score}</strong> </span>
-  <span class="precision-toolbar-buttons">
-    <Button dark on:click={restartGame} text="🔄 Recommencer" />
-  </span>
-  {#if !$instaDeath}<span class="precision-progress" style="width: {progressPercent}%" />{/if}
-</header>
-
-<div class="precision-playground">
-  <div class="precision-target-wrapper" on:mousedown={onMisclick}>
-    <button
-      aria-hidden={String(!($gameState.matches('playing.turn') || $gameState.matches('playing.cooldown')))}
-      aria-label="Cible"
-      class="precision-target {targetStateClass}"
-      style="--x: {targetPosition.x}px; --y: {targetPosition.y}px;"
-      on:mousedown={onSuccess} />
-  </div>
-  {#if $gameState.matches('playing.countdown')}
-    <Countdown />
-  {/if}
-  <span
-    class="precision-misclick {misclickStateClass}"
-    style="--x: {misclickPosition.x}px; --y: {misclickPosition.y}px;" />
-</div>

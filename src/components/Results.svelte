@@ -17,6 +17,47 @@
   $: scoreIcon = getScoreIcon(score, $instaDeath);
 </script>
 
+<div class="precision-results">
+  <span class="precision-result-icon">{scoreIcon}</span>
+  <h3 class="precision-result-title">
+    <strong>Score&nbsp;: {score}</strong>
+    {#if $instaDeath}<span>Mort subite</span>{/if}
+  </h3>
+
+  <table class="precision-params">
+    {#if $instaDeath}
+      <tr>
+        <th scope="row">Cibles touchées</th>
+        <td>{successCount}</td>
+      </tr>
+    {:else}
+      <tr>
+        <th scope="row">Cibles touchées</th>
+        <td>{successCount} / {turnsCount}</td>
+      </tr>
+      <tr>
+        <th scope="row">Clics à côté</th>
+        <td>{misclickCount}</td>
+      </tr>
+    {/if}
+    <tr>
+      <th scope="row">Cible</th>
+      <td>{$targetSize}&nbsp;px</td>
+    </tr>
+    <tr>
+      <th scope="row">Conteneur</th>
+      <td>{$playgroundSize}&nbsp;px</td>
+    </tr>
+    <tr>
+      <th scope="row">Vitesse</th>
+      <td>{$gameSpeed}&nbsp;ms</td>
+    </tr>
+  </table>
+  <p>
+    <Button on:click={goToSetup} text="🔄 Recommencer" />
+  </p>
+</div>
+
 <style>
   .precision-results {
     box-sizing: border-box;
@@ -66,44 +107,3 @@
     color: var(--color-highlight);
   }
 </style>
-
-<div class="precision-results">
-  <span class="precision-result-icon">{scoreIcon}</span>
-  <h3 class="precision-result-title">
-    <strong>Score&nbsp;: {score}</strong>
-    {#if $instaDeath}<span>Mort subite</span>{/if}
-  </h3>
-
-  <table class="precision-params">
-    {#if $instaDeath}
-      <tr>
-        <th scope="row">Cibles touchées</th>
-        <td>{successCount}</td>
-      </tr>
-    {:else}
-      <tr>
-        <th scope="row">Cibles touchées</th>
-        <td>{successCount} / {turnsCount}</td>
-      </tr>
-      <tr>
-        <th scope="row">Clics à côté</th>
-        <td>{misclickCount}</td>
-      </tr>
-    {/if}
-    <tr>
-      <th scope="row">Cible</th>
-      <td>{$targetSize}&nbsp;px</td>
-    </tr>
-    <tr>
-      <th scope="row">Conteneur</th>
-      <td>{$playgroundSize}&nbsp;px</td>
-    </tr>
-    <tr>
-      <th scope="row">Vitesse</th>
-      <td>{$gameSpeed}&nbsp;ms</td>
-    </tr>
-  </table>
-  <p>
-    <Button on:click={goToSetup} text="🔄 Recommencer" />
-  </p>
-</div>

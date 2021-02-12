@@ -1,3 +1,10 @@
+<p class="precision-countdown">
+  <span>Clique le carré vert</span>
+  <strong>3</strong>
+  <strong>2</strong>
+  <strong>1</strong>
+</p>
+
 <style>
   .precision-countdown {
     box-sizing: border-box;
@@ -77,10 +84,3 @@
     }
   }
 </style>
-
-<p class="precision-countdown">
-  <span>Clique le carré vert</span>
-  <strong>3</strong>
-  <strong>2</strong>
-  <strong>1</strong>
-</p>
