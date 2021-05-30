@@ -1,4 +1,5 @@
 <script>
+  import { t } from "svelte-i18n";
   import { PLAYGROUND_SIZE, TARGET_SIZE, SPEED } from "../constants.js";
   import { send } from "../state/game.js";
   import {
@@ -16,16 +17,13 @@
 </script>
 
 <div class="precision-setup">
-  <h3 class="precision-title">Petit jeu de précision…</h3>
-  <p class="precision-intro">
-    Material Design recommande des boutons de 24px minimum pour les interfaces à la souris. Est-ce
-    que cela vous semble suffisant&nbsp;?
-  </p>
+  <h3 class="precision-title">{$t("setup.title")}</h3>
+  <p class="precision-intro">{$t("setup.intro")}</p>
   <p class="precision-target-demo"><span class="precision-target" /></p>
   <form class="precision-settings" on:submit={onSubmit}>
     <div class="precision-settings-row">
       <p>
-        <label for="target-size">Cible (px)</label>
+        <label for="target-size">{$t("setup.target_size_label")}</label>
         <input
           bind:value={$targetSizeInput}
           required
@@ -34,10 +32,10 @@
           step={TARGET_SIZE.STEP}
           min={TARGET_SIZE.MIN}
           max={TARGET_SIZE.MAX}
-          title="Taille de la cible entre {TARGET_SIZE.MIN} et {TARGET_SIZE.MAX} pixels" />
+          title={$t("setup.target_size_desc", { values: TARGET_SIZE })} />
       </p>
       <p>
-        <label for="playground-size">Conteneur (px)</label>
+        <label for="playground-size">{$t("setup.playground_size_label")}</label>
         <input
           bind:value={$playgroundSizeInput}
           required
@@ -46,10 +44,10 @@
           step={PLAYGROUND_SIZE.STEP}
           min={PLAYGROUND_SIZE.MIN}
           max={PLAYGROUND_SIZE.MAX}
-          title="Taille du conteneur entre {PLAYGROUND_SIZE.MIN} et {PLAYGROUND_SIZE.MAX} pixels" />
+          title={$t("setup.playground_size_desc", { values: PLAYGROUND_SIZE })} />
       </p>
       <p>
-        <label for="game-speed">Vitesse (ms)</label>
+        <label for="game-speed">{$t("setup.speed_label")}</label>
         <input
           bind:value={$gameSpeedInput}
           required
@@ -58,17 +56,17 @@
           step={SPEED.STEP}
           min={SPEED.MIN}
           max={SPEED.MAX}
-          title="Vitesse du jeu entre {SPEED.MIN}ms et {SPEED.MAX}ms" />
+          title={$t("setup.speed_desc", { values: SPEED })} />
       </p>
     </div>
     <p class="precision-settings-instadeath">
       <label for="insta-death">
         <input type="checkbox" bind:checked={$instaDeath} id="insta-death" />
-        <span>Mort subite 💣</span>
+        <span>{$t("setup.instadeath_label")}</span>
       </label>
     </p>
     <p class="precision-settings-submit">
-      <Button type="submit" big full text="▶️ Commencer" />
+      <Button type="submit" big full text={$t("setup.start_button")} />
     </p>
   </form>
 </div>

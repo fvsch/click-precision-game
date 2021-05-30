@@ -1,4 +1,5 @@
 import commonjs from "@rollup/plugin-commonjs";
+import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import css from "rollup-plugin-css-only";
@@ -59,6 +60,7 @@ export default {
       dedupe: ["svelte"],
     }),
     commonjs(),
+    json(),
     replace({
       preventAssignment: true,
       values: {

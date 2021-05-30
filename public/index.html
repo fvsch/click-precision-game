@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Petit jeu de précision</title>
+    <title>Click precision game</title>
     <link rel="stylesheet" href="build/bundle.css">
     <style>
       html {
@@ -19,7 +19,7 @@
         justify-content: center;
         align-content: center;
       }
-      .repo-info {
+      body > footer {
         margin-top: 20px;
         margin-bottom: 0;
         text-align: center;
@@ -27,13 +27,18 @@
         font-size: 85%;
         line-height: 1.5;
       }
+      body > footer p {
+        margin: 0;
+      }
     </style>
     <script defer src="build/bundle.js"></script>
   </head>
-  <body>
-    <div id="click-precision-game"></div>
-    <p class="repo-info">
-      Retrouvez le code source sur <a href="https://github.com/fvsch/click-precision-game">github.com/fvsch/click-precision-game</a>.
-    </p>
+  <body id="click-precision-page">
+    <footer>
+      <p>
+        Find the source code on
+        <a href="https://github.com/fvsch/click-precision-game">fvsch/click-precision-game</a>
+      </p>
+    </footer>
   </body>
 </html>

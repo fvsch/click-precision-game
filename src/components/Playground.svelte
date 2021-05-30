@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import { t } from "svelte-i18n";
   import { CLICK_POINTS, MAX_TURNS, TURN_SUCCESS } from "../constants.js";
   import { clamp } from "../helpers.js";
   import gameState, { send } from "../state/game.js";
@@ -215,9 +216,11 @@
 </script>
 
 <header class="precision-toolbar">
-  <span class="precision-toolbar-score"> <strong>Score&nbsp;: {score}</strong> </span>
+  <span class="precision-toolbar-score">
+    <strong>{$t('playground.score')} {score}</strong>
+  </span>
   <span class="precision-toolbar-buttons">
-    <Button dark on:click={restartGame} text="🔄 Recommencer" />
+    <Button dark on:click={restartGame} text={$t('playground.restart')} />
   </span>
   {#if !$instaDeath}<span class="precision-progress" style="width: {progressPercent}%" />{/if}
 </header>

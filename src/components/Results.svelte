@@ -1,4 +1,5 @@
 <script>
+  import { t } from "svelte-i18n";
   import { getScoreIcon } from "../helpers.js";
   import { send } from "../state/game.js";
   import { gameSpeed, instaDeath, playgroundSize, targetSize } from "../state/setup.js";
@@ -20,41 +21,41 @@
 <div class="precision-results">
   <span class="precision-result-icon">{scoreIcon}</span>
   <h3 class="precision-result-title">
-    <strong>Score&nbsp;: {score}</strong>
-    {#if $instaDeath}<span>Mort subite</span>{/if}
+    <strong>{$t("results.score")} {score}</strong>
+    {#if $instaDeath}<span>{$t("results.instadeath")}</span>{/if}
   </h3>
 
   <table class="precision-params">
     {#if $instaDeath}
       <tr>
-        <th scope="row">Cibles touchées</th>
+        <th scope="row">{$t("results.success_count")}</th>
         <td>{successCount}</td>
       </tr>
     {:else}
       <tr>
-        <th scope="row">Cibles touchées</th>
+        <th scope="row">{$t("results.success_count")}</th>
         <td>{successCount} / {turnsCount}</td>
       </tr>
       <tr>
-        <th scope="row">Clics à côté</th>
+        <th scope="row">{$t("results.misclick_count")}</th>
         <td>{misclickCount}</td>
       </tr>
     {/if}
     <tr>
-      <th scope="row">Cible</th>
-      <td>{$targetSize}&nbsp;px</td>
+      <th scope="row">{$t("results.target_size")}</th>
+      <td>{$t("results.target_size_value", { values: [$targetSize] })}</td>
     </tr>
     <tr>
-      <th scope="row">Conteneur</th>
-      <td>{$playgroundSize}&nbsp;px</td>
+      <th scope="row">{$t("results.playground_size")}</th>
+      <td>{$t("results.playground_size_value", { values: [$playgroundSize] })}</td>
     </tr>
     <tr>
-      <th scope="row">Vitesse</th>
-      <td>{$gameSpeed}&nbsp;ms</td>
+      <th scope="row">{$t("results.game_speed")}</th>
+      <td>{$t("results.game_speed_value", { values: [$gameSpeed] })}</td>
     </tr>
   </table>
   <p>
-    <Button on:click={goToSetup} text="🔄 Recommencer" />
+    <Button on:click={goToSetup} text={$t("results.restart")} />
   </p>
 </div>
 

@@ -1,0 +1,37 @@
+
+{
+  "page": {
+    "title": "Click precision game",
+    "repo_info": "Find the source code on"
+  },
+  "setup": {
+    "title": "Let’s play a precision game!",
+    "intro": "Material Design specifies a 24px minimum size for pointer-driven UI. But is that enough?",
+    "target_size_label": "Target (px)",
+    "target_size_desc": "Size of the target between {MIN} and {MAX} pixels",
+    "playground_size_label": "Playground (px)",
+    "playground_size_desc": "Size of the game area between {MIN} and {MAX} pixels",
+    "speed_label": "Speed (ms)",
+    "speed_desc": "Game speed in milliseconds, between {MIN} and {MAX}ms",
+    "instadeath_label": "Instant death 💣",
+    "start_button": "▶️ Start playing"
+  },
+  "playground": {
+    "countdown_intro": "Click the green square!",
+    "score": "Score:",
+    "restart": "🔄 Start again"
+  },
+  "results": {
+    "score": "Score:",
+    "instadeath": "Instant death",
+    "success_count": "Targets reached",
+    "misclick_count": "Misclicks",
+    "target_size": "Target size",
+    "target_size_value": "{0}px",
+    "playground_size": "Playground size",
+    "playground_size_value": "{0}px",
+    "game_speed": "Game speed",
+    "game_speed_value": "{0}ms",
+    "restart": "🔄 Try again?"
+  }
+}

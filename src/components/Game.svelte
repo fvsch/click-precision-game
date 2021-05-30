@@ -1,4 +1,5 @@
 <script>
+  import { locale } from "svelte-i18n";
   import gameState from "../state/game.js";
   import {
     gamePhaseDurations,
@@ -23,6 +24,7 @@
 </script>
 
 <section
+  lang={$locale}
   class="precision-container"
   class:precision-container-instadeath={$instaDeath}
   style={`

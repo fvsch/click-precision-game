@@ -1,5 +1,9 @@
+<script>
+  import { t } from "svelte-i18n";
+</script>
+
 <p class="precision-countdown">
-  <span>Clique le carré vert</span>
+  <span>{$t('playground.countdown_intro')}</span>
   <strong>3</strong>
   <strong>2</strong>
   <strong>1</strong>

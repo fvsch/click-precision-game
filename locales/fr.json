@@ -1,0 +1,36 @@
+{
+  "page": {
+    "title": "Petit jeu de précision",
+    "repo_info": "Retrouvez le code source sur"
+  },
+  "setup": {
+    "title": "Petit jeu de précision…",
+    "intro": "Material Design recommande des boutons de 24px minimum pour les interfaces à la souris. Est-ce que cela vous semble suffisant ?",
+    "target_size_label": "Cible (px)",
+    "target_size_desc": "Taille de la cible entre {MIN} et {MAX} pixels",
+    "playground_size_label": "Conteneur (px)",
+    "playground_size_desc": "Taille du conteneur entre {MIN} et {MAX} pixels",
+    "speed_label": "Vitesse (ms)",
+    "speed_desc": "Vitesse du jeu entre {MIN}ms et {MAX}ms",
+    "instadeath_label": "Mort subite 💣",
+    "start_button": "▶️ Commencer"
+  },
+  "playground": {
+    "countdown_intro": "Cliquez le carré vert",
+    "score": "Score :",
+    "restart": "🔄 Recommencer"
+  },
+  "results": {
+    "score": "Score :",
+    "instadeath": "Mort subite",
+    "success_count": "Cibles touchées",
+    "misclick_count": "Clics à côté",
+    "target_size": "Cible",
+    "target_size_value": "{0} px",
+    "playground_size": "Conteneur",
+    "playground_size_value": "{0} px",
+    "game_speed": "Vitesse",
+    "game_speed_value": "{0} ms",
+    "restart": "🔄 Recommencer"
+  }
+}
