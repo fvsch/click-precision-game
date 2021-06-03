@@ -4,11 +4,11 @@ import FR_labels from "../locales/fr.json";
 import DemoPage from "./components/DemoPage.svelte";
 import Game from "./components/Game.svelte";
 
-addMessages("en-US", EN_labels);
-addMessages("fr-FR", FR_labels);
+addMessages("en", EN_labels);
+addMessages("fr", FR_labels);
 
 init({
-  fallbackLocale: "en-EN",
+  fallbackLocale: "en",
   initialLocale: getLocaleFromNavigator(),
 });
 
