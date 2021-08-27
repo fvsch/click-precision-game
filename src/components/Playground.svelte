@@ -217,10 +217,10 @@
 
 <header class="precision-toolbar">
   <span class="precision-toolbar-score">
-    <strong>{$t('playground.score')} {score}</strong>
+    <strong>{$t("playground.score")} {score}</strong>
   </span>
   <span class="precision-toolbar-buttons">
-    <Button dark on:click={restartGame} text={$t('playground.restart')} />
+    <Button dark on:click={restartGame} text={$t("playground.restart")} />
   </span>
   {#if !$instaDeath}<span class="precision-progress" style="width: {progressPercent}%" />{/if}
 </header>

@@ -3,7 +3,7 @@
 </script>
 
 <p class="precision-countdown">
-  <span>{$t('playground.countdown_intro')}</span>
+  <span>{$t("playground.countdown_intro")}</span>
   <strong>3</strong>
   <strong>2</strong>
   <strong>1</strong>
