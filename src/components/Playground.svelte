@@ -131,6 +131,7 @@
    */
   function recordInstadeathClick(onTarget) {
     if (onTarget === true && turnSuccess === TURN_SUCCESS.PLAYING) {
+      score += CLICK_POINTS.SUCCESS;
       turnSuccess = TURN_SUCCESS.SUCCESS;
     } else {
       turnSuccess = TURN_SUCCESS.MISSED;
