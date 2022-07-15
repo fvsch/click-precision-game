@@ -10,7 +10,7 @@
   "dependencies": {
     "sirv-cli": "^1.0.14",
     "svelte-i18n": "^3.3.10",
-    "svelte": "^3.42.3",
+    "svelte": "^3.49.0",
     "xstate": "^4.23.1",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
